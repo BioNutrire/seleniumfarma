@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Selenium Farmácia | Manipulação de Fórmulas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,900&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --verde:#5BB832;
+    --verde-escuro:#3E8A1F;
+    --azul:#1F2A6B;
+    --azul-claro:#3949A6;
+    --creme:#F7F8F3;
+    --branco:#FFFFFF;
+    --tinta:#171B2E;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'Manrope',sans-serif;
+    color:var(--tinta);
+    background:var(--creme);
+    line-height:1.6;
+  }
+  h1,h2,h3{font-family:'Fraunces',serif;}
+  a{text-decoration:none;color:inherit;}
+  img{display:block;max-width:100%;}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 24px;}
+
+  /* HEADER */
+  header{
+    position:sticky;top:0;z-index:50;
+    background:var(--branco);
+    border-bottom:1px solid #e7e7df;
+  }
+  .nav{display:flex;align-items:center;justify-content:space-between;padding:14px 0;}
+  .brand{display:flex;align-items:center;gap:10px;font-family:'Fraunces',serif;font-weight:700;font-size:1.3rem;color:var(--azul);}
+  .brand span{color:var(--verde);}
+  .leaf-mark{width:30px;height:30px;flex-shrink:0;}
+  nav ul{display:flex;gap:30px;list-style:none;font-weight:600;font-size:.95rem;}
+  nav ul a{position:relative;padding-bottom:4px;}
+  nav ul a:hover{color:var(--verde-escuro);}
+  .nav-cta{
+    background:var(--azul);color:#fff;padding:10px 20px;border-radius:30px;
+    font-weight:700;font-size:.9rem;white-space:nowrap;
+    transition:background .2s;
+  }
+  .nav-cta:hover{background:var(--azul-claro);}
+  .menu-btn{display:none;background:none;border:none;font-size:1.6rem;cursor:pointer;color:var(--azul);}
+
+  /* HERO */
+  .hero{
+    position:relative;
+    background:var(--azul);
+    overflow:hidden;
+    min-height:88vh;
+    display:flex;align-items:center;
+  }
+  .hero::before{
+    content:"";position:absolute;inset:0;
+    background-image:url('img/1200x628.jpg');
+    background-size:cover;background-position:center 25%;
+    opacity:.55;
+  }
+  .hero::after{
+    content:"";position:absolute;inset:0;
+    background:linear-gradient(100deg, rgba(31,42,107,.97) 0%, rgba(31,42,107,.88) 35%, rgba(31,42,107,.25) 70%, rgba(31,42,107,.05) 100%);
+  }
+  .hero-content{position:relative;z-index:2;padding:90px 0;color:#fff;max-width:640px;}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;
+    background:rgba(91,184,50,.18);border:1px solid rgba(91,184,50,.5);
+    color:#9FE372;padding:6px 14px;border-radius:30px;font-size:.8rem;
+    font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:22px;
+  }
+  .hero h1{
+    font-size:clamp(2.4rem,5.2vw,3.6rem);
+    font-weight:700;line-height:1.08;margin-bottom:18px;
+  }
+  .hero h1 em{
+    font-style:normal;color:var(--verde);
+    font-weight:900;
+  }
+  .hero p{font-size:1.1rem;color:#D6DAEF;max-width:480px;margin-bottom:34px;}
+  .hero-actions{display:flex;gap:16px;flex-wrap:wrap;}
+  .btn-primary{
+    background:var(--verde);color:#0d2406;padding:15px 30px;border-radius:8px;
+    font-weight:800;font-size:1rem;display:inline-flex;align-items:center;gap:10px;
+    box-shadow:0 8px 24px rgba(91,184,50,.35);
+    transition:transform .2s, box-shadow .2s;
+  }
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(91,184,50,.45);}
+  .btn-ghost{
+    border:1.5px solid rgba(255,255,255,.4);color:#fff;padding:15px 28px;border-radius:8px;
+    font-weight:700;font-size:1rem;transition:.2s;
+  }
+  .btn-ghost:hover{background:rgba(255,255,255,.1);border-color:#fff;}
+
+  /* MARQUEE STRIP */
+  .strip{
+    background:var(--verde);color:#0d2406;font-weight:800;
+    font-family:'Fraunces',serif;font-size:1rem;
+    padding:14px 0;overflow:hidden;white-space:nowrap;
+    border-top:3px solid var(--verde-escuro);border-bottom:3px solid var(--verde-escuro);
+  }
+  .strip-track{display:inline-block;animation:scroll 26s linear infinite;}
+  .strip span{margin:0 28px;}
+  @keyframes scroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+  /* SECTION SHARED */
+  section{padding:96px 0;}
+  .section-head{max-width:620px;margin-bottom:56px;}
+  .tag{
+    color:var(--verde-escuro);font-weight:800;text-transform:uppercase;
+    letter-spacing:.08em;font-size:.82rem;margin-bottom:12px;display:block;
+  }
+  .section-head h2{font-size:clamp(1.9rem,3.4vw,2.6rem);color:var(--azul);font-weight:700;line-height:1.15;}
+  .section-head p{margin-top:16px;color:#4a4f5e;font-size:1.05rem;}
+
+  /* ABOUT */
+  .about{background:var(--branco);}
+  .about-grid{display:grid;grid-template-columns:1fr 1.1fr;gap:64px;align-items:center;}
+  .about-img{position:relative;isolation:isolate;}
+  .about-img img{border-radius:16px;box-shadow:0 30px 60px -20px rgba(31,42,107,.35);}
+  .about-text p{color:#444a5a;margin-bottom:18px;font-size:1.02rem;}
+  .pillars{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:30px;}
+  .pillar{
+    background:var(--creme);border:1px solid #e7e7df;border-radius:12px;padding:18px 20px;
+  }
+  .pillar h4{color:var(--azul);font-family:'Fraunces',serif;font-size:1.05rem;margin-bottom:4px;}
+  .pillar p{font-size:.9rem;color:#5a5f6e;margin:0;}
+
+  /* SERVICES */
+  .services{background:var(--azul);color:#fff;position:relative;overflow:hidden;}
+  .services::before{
+    content:"";position:absolute;width:600px;height:600px;border-radius:50%;
+    background:radial-gradient(circle, rgba(91,184,50,.18), transparent 70%);
+    top:-200px;right:-200px;
+  }
+  .services .section-head h2{color:#fff;}
+  .services .section-head .tag{color:#9FE372;}
+  .services .section-head p{color:#c3c8e6;}
+  .service-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;position:relative;z-index:2;}
+  .service-card{
+    background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);
+    border-radius:16px;padding:32px 26px;transition:.25s;
+  }
+  .service-card:hover{background:rgba(255,255,255,.09);transform:translateY(-4px);}
+  .service-icon{
+    width:48px;height:48px;border-radius:10px;background:var(--verde);
+    display:flex;align-items:center;justify-content:center;margin-bottom:20px;color:#0d2406;
+  }
+  .service-card h3{font-size:1.2rem;margin-bottom:10px;}
+  .service-card p{color:#c3c8e6;font-size:.92rem;}
+
+  /* OFFER CTA */
+  .offer{
+    background:var(--creme);
+  }
+  .offer-box{
+    background:linear-gradient(120deg, var(--verde) 0%, var(--verde-escuro) 100%);
+    border-radius:24px;padding:64px;display:grid;grid-template-columns:1.3fr 1fr;gap:40px;align-items:center;
+    color:#0d2406;position:relative;overflow:hidden;
+  }
+  .offer-box::after{
+    content:"";position:absolute;right:-60px;bottom:-60px;width:240px;height:240px;
+    background:rgba(255,255,255,.15);border-radius:50%;
+  }
+  .offer-text h2{font-size:clamp(1.8rem,3.5vw,2.5rem);font-weight:900;line-height:1.1;margin-bottom:16px;}
+  .offer-text p{font-size:1.05rem;max-width:420px;opacity:.9;}
+  .offer-text small{display:block;margin-top:14px;font-size:.82rem;opacity:.75;}
+  .offer-img img{border-radius:16px;position:relative;z-index:2;box-shadow:0 20px 40px rgba(0,0,0,.2);}
+
+  /* LOCATION */
+  .location{background:var(--branco);}
+  .loc-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:stretch;}
+  .loc-info{display:flex;flex-direction:column;justify-content:center;gap:28px;}
+  .loc-item{display:flex;gap:18px;align-items:flex-start;}
+  .loc-icon{
+    width:46px;height:46px;border-radius:50%;background:var(--creme);border:1px solid #e7e7df;
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--verde-escuro);
+  }
+  .loc-item h4{font-family:'Fraunces',serif;color:var(--azul);font-size:1.1rem;margin-bottom:4px;}
+  .loc-item p{color:#4a4f5e;font-size:.97rem;}
+  .loc-item a{color:var(--azul-claro);font-weight:700;}
+  .map-frame{border-radius:16px;overflow:hidden;border:1px solid #e7e7df;min-height:340px;box-shadow:0 20px 40px -16px rgba(31,42,107,.2);}
+  .map-frame iframe{width:100%;height:100%;min-height:340px;border:0;}
+
+  /* FOOTER */
+  footer{background:var(--azul);color:#cfd4ef;padding:56px 0 28px;}
+  .footer-top{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:30px;margin-bottom:40px;}
+  .footer-brand{display:flex;align-items:center;gap:10px;font-family:'Fraunces',serif;font-weight:700;font-size:1.3rem;color:#fff;}
+  .footer-brand span{color:var(--verde);}
+  .footer-cta{
+    background:var(--verde);color:#0d2406;padding:13px 26px;border-radius:8px;font-weight:800;
+    display:inline-flex;align-items:center;gap:8px;
+  }
+  .footer-bottom{
+    border-top:1px solid rgba(255,255,255,.12);padding-top:22px;
+    display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:.85rem;color:#9aa1c9;
+  }
+
+  /* WHATSAPP FLOAT */
+  .wa-float{
+    position:fixed;bottom:26px;right:26px;z-index:60;
+    background:var(--verde);width:60px;height:60px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;color:#0d2406;
+    box-shadow:0 10px 26px rgba(91,184,50,.45);
+    animation:pulse 2.4s infinite;
+  }
+  @keyframes pulse{
+    0%{box-shadow:0 0 0 0 rgba(91,184,50,.5);}
+    70%{box-shadow:0 0 0 16px rgba(91,184,50,0);}
+    100%{box-shadow:0 0 0 0 rgba(91,184,50,0);}
+  }
+
+  @media(max-width:920px){
+    nav ul{display:none;}
+    .menu-btn{display:block;}
+    .about-grid, .loc-grid{grid-template-columns:1fr;}
+    .service-grid{grid-template-columns:1fr;}
+    .offer-box{grid-template-columns:1fr;padding:40px 28px;}
+    .offer-img{order:-1;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a href="#" class="brand">
+      <svg class="leaf-mark" viewBox="0 0 24 24" fill="none"><path d="M4 14c0-6 5-10 14-10 0 9-4 14-10 14-2 0-4-1-4-4z" fill="#5BB832"/><path d="M4 20c4-4 8-7 14-10" stroke="#1F2A6B" stroke-width="1.4" stroke-linecap="round"/></svg>
+      Selenium <span>Farmácia</span>
+    </a>
+    <nav><ul>
+      <li><a href="#sobre">Sobre</a></li>
+      <li><a href="#servicos">Serviços</a></li>
+      <li><a href="#local">Localização</a></li>
+    </ul></nav>
+    <a class="nav-cta" href="https://wa.me/5511947773195" target="_blank">Fale no WhatsApp</a>
+    <button class="menu-btn">☰</button>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-content">
+    <span class="eyebrow">🌿 Manipulação de Fórmulas</span>
+    <h1>Sua receita merece o <em>cuidado certo</em>, com o melhor preço da região.</h1>
+    <p>Traga sua receita até a Selenium Farmácia e receba atendimento farmacêutico personalizado, com qualidade e o melhor preço da região.</p>
+    <div class="hero-actions">
+      <a class="btn-primary" href="https://wa.me/5511947773195" target="_blank">📲 Solicitar orçamento agora</a>
+      <a class="btn-ghost" href="#sobre">Conhecer a farmácia</a>
+    </div>
+  </div>
+</section>
+
+<div class="strip">
+  <div class="strip-track">
+    <span>✦ TRAGA A SUA RECEITA</span><span>✦ MANIPULAÇÃO DE FÓRMULAS</span><span>✦ ATENDIMENTO PERSONALIZADO</span><span>✦ SANTO ANDRÉ - SP</span>
+    <span>✦ TRAGA A SUA RECEITA</span><span>✦ MANIPULAÇÃO DE FÓRMULAS</span><span>✦ ATENDIMENTO PERSONALIZADO</span><span>✦ SANTO ANDRÉ - SP</span>
+  </div>
+</div>
+
+<section class="about" id="sobre">
+  <div class="wrap about-grid">
+    <div class="about-img">
+      <img src="img/1200x1200.jpg" alt="Farmacêutico da Selenium Farmácia">
+    </div>
+    <div class="about-text">
+      <span class="tag">Quem cuida da sua fórmula</span>
+      <h2 style="color:var(--azul);font-size:2rem;margin-bottom:18px;">Manipulação feita para o seu bolso e sua saúde</h2>
+      <p>A Selenium Farmácia é especializada em manipulação de fórmulas, unindo rigor técnico-farmacêutico a um atendimento próximo, em Santo André-SP. Trazemos sua receita, analisamos com calma e entregamos a fórmula certa pelo melhor custo possível.</p>
+      <div class="pillars">
+        <div class="pillar"><h4>Análise gratuita</h4><p>Avaliamos sua receita e orçamento sem compromisso.</p></div>
+        <div class="pillar"><h4>Preço justo</h4><p>Buscamos sempre o melhor custo-benefício para sua fórmula.</p></div>
+        <div class="pillar"><h4>Atendimento próximo</h4><p>Time farmacêutico disponível por WhatsApp.</p></div>
+        <div class="pillar"><h4>Qualidade garantida</h4><p>Manipulação seguindo boas práticas farmacêuticas.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="services" id="servicos">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="tag">Como ajudamos</span>
+      <h2>Tudo que sua fórmula precisa, em um só lugar</h2>
+      <p>Da análise da receita à entrega da fórmula manipulada, cuidamos de cada etapa com atenção.</p>
+    </div>
+    <div class="service-grid">
+      <div class="service-card">
+        <div class="service-icon">📋</div>
+        <h3>Análise de receita</h3>
+        <p>Avaliamos sua prescrição e indicamos a melhor forma de manipulação.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">💰</div>
+        <h3>Orçamento sem compromisso</h3>
+        <p>Analisamos sua receita e apresentamos o melhor preço possível.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">🌿</div>
+        <h3>Fórmulas personalizadas</h3>
+        <p>Cápsulas, cremes, soluções e mais, feitos sob medida para você.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="location" id="local">
+  <div class="wrap loc-grid">
+    <div class="loc-info">
+      <span class="tag">Visite ou chame no WhatsApp</span>
+      <h2 style="color:var(--azul);font-size:2rem;">Estamos pertinho de você</h2>
+      <div class="loc-item">
+        <div class="loc-icon">📍</div>
+        <div>
+          <h4>Endereço</h4>
+          <p>Av. Lino Jardim, 1194 — Jardim Bela Vista, Santo André-SP</p>
+        </div>
+      </div>
+      <div class="loc-item">
+        <div class="loc-icon">📞</div>
+        <div>
+          <h4>WhatsApp</h4>
+          <p><a href="https://wa.me/5511947773195" target="_blank">(11) 94777-3195</a></p>
+        </div>
+      </div>
+      <div class="loc-item">
+        <div class="loc-icon">🕒</div>
+        <div>
+          <h4>Atendimento</h4>
+          <p>Segunda a sexta, horário comercial. Fale conosco para confirmar.</p>
+        </div>
+      </div>
+    </div>
+    <div class="map-frame">
+      <iframe src="https://www.google.com/maps?q=Av.+Lino+Jardim,+1194,+Jardim+Bela+Vista,+Santo+Andr%C3%A9-SP&output=embed" loading="lazy"></iframe>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-brand">Selenium <span>Farmácia</span></div>
+      <a class="footer-cta" href="https://wa.me/5511947773195" target="_blank">📲 Falar no WhatsApp</a>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Selenium Farmácia — Manipulação de Fórmulas. Todos os direitos reservados.</span>
+      <span>Av. Lino Jardim, 1194 — Santo André-SP · (11) 94777-3195</span>
+    </div>
+  </div>
+</footer>
+
+<a class="wa-float" href="https://wa.me/5511947773195" target="_blank" aria-label="WhatsApp">
+  <svg width="28" height="28" viewBox="0 0 24 24" fill="#0d2406"><path d="M12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.5 1.3 5L2 22l5.2-1.4c1.4.8 3.1 1.2 4.8 1.2 5.5 0 10-4.5 10-10S17.5 2 12 2zm0 18c-1.5 0-3-.4-4.3-1.2l-.3-.2-3.1.8.8-3-.2-.3C4.4 14.9 4 13.5 4 12c0-4.4 3.6-8 8-8s8 3.6 8 8-3.6 8-8 8zm4.4-5.9c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.5.1-.2.2-.6.8-.8 1-.1.2-.3.2-.5.1-.7-.3-1.4-.8-2-1.4-.5-.5-1-1.1-1.4-1.8-.1-.2 0-.4.1-.5.1-.1.2-.3.4-.4.1-.1.2-.3.2-.4.1-.2 0-.3 0-.5-.1-.1-.5-1.3-.7-1.8-.2-.5-.4-.4-.5-.4h-.5c-.2 0-.4.1-.6.3-.7.7-1 1.5-1 2.4.1 1 .5 2 1.2 2.9 1.2 1.7 2.7 3 4.6 3.7.5.2 1 .3 1.4.4.6.1 1.1.1 1.5 0 .5-.1 1.4-.6 1.6-1.1.2-.5.2-1 .1-1.1-.1-.1-.2-.2-.4-.3z"/></svg>
+</a>
+
+</body>
+</html>
